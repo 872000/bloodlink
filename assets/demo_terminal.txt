@@ -1,0 +1,26 @@
+
+[Request #1] 3u O- urgency=5/5 @ City General ER
+   0.946  Aarav Sharma     O-   dist=1.4
+   0.939  Kabir Singh      O-   dist=1.6
+
+[Request #4] 2u AB- urgency=5/5 @ City General ER
+   0.878  Arjun Patel      AB-  dist=3.2
+   0.696  Aarav Sharma     O-   dist=1.4
+   0.689  Kabir Singh      O-   dist=1.6
+
+[Request #2] 2u A+ urgency=4/5 @ St. Mary's Hospital
+   0.669  Priya Nair       A-   dist=3.6
+   0.635  Liam O'Brien     O+   dist=1.4
+   0.555  Kabir Singh      O-   dist=2.9
+
+[Request #5] 4u O+ urgency=3/5 @ Northside Medical
+   0.894  Ethan Davis      O+   dist=0.7
+   0.839  Liam O'Brien     O+   dist=2.2
+   0.675  Aarav Sharma     O-   dist=4.0
+
+[Request #3] 1u B+ urgency=2/5 @ Riverside Clinic
+   0.855  Ava Garcia       B+   dist=0.7
+   0.640  Sofia Rossi      B-   dist=4.0
+   0.622  Ravi Kumar       B-   dist=4.5
+
+14 matches across 5 requests.

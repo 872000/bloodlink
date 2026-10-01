@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# SQLite runtime databases (demo data is bundled in code)
+*.db
+*.db-journal
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
