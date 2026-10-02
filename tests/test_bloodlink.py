@@ -193,3 +193,19 @@ def test_demo_seed_and_full_pipeline(conn):
     # critical O- request must be served by O- donors only
     o_neg = [t for t in q if t[0]["blood_group"] == "O-" and t[0]["urgency"] == 5]
     assert o_neg and all(t[1]["blood_group"] == "O-" for t in o_neg)
+
+
+def test_add_donor_rejects_invalid_blood_group(conn):
+    with pytest.raises(ValueError, match="[Ii]nvalid"):
+        db.add_donor(conn, "Nobody", "X+", 0, 0)
+
+
+def test_add_request_rejects_invalid_blood_group(conn):
+    with pytest.raises(ValueError, match="[Ii]nvalid"):
+        db.add_request(conn, "ZZ", 1, 3, "Hosp", 0, 0)
+
+
+def test_add_donor_normalizes_group_format(conn):
+    did = db.add_donor(conn, "Jane", "a+", 0, 0)
+    row = conn.execute("SELECT blood_group FROM donors WHERE id = ?", (did,)).fetchone()
+    assert row["blood_group"] == "A+"

@@ -5,6 +5,8 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
+from .compatibility import parse_group
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS donors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,22 +57,24 @@ def connect(db_path: str | Path | None = None) -> sqlite3.Connection:
 
 
 def add_donor(conn, name, blood_group, x, y, last_donation=None, available=True) -> int:
+    abo, rh = parse_group(blood_group)  # validate; raises ValueError on bad input
     cur = conn.execute(
         "INSERT INTO donors (name, blood_group, x, y, last_donation, available)"
         " VALUES (?,?,?,?,?,?)",
-        (name, blood_group, x, y, last_donation, int(available)),
+        (name, abo + rh, x, y, last_donation, int(available)),
     )
     conn.commit()
     return cur.lastrowid
 
 
 def add_request(conn, blood_group, units, urgency, hospital, x, y) -> int:
+    abo, rh = parse_group(blood_group)  # validate; raises ValueError on bad input
     if not 1 <= urgency <= 5:
         raise ValueError("urgency must be 1..5")
     cur = conn.execute(
         "INSERT INTO requests (blood_group, units, urgency, hospital, x, y)"
         " VALUES (?,?,?,?,?,?)",
-        (blood_group, units, urgency, hospital, x, y),
+        (abo + rh, units, urgency, hospital, x, y),
     )
     conn.commit()
     return cur.lastrowid
