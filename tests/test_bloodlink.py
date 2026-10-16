@@ -209,3 +209,8 @@ def test_add_donor_normalizes_group_format(conn):
     did = db.add_donor(conn, "Jane", "a+", 0, 0)
     row = conn.execute("SELECT blood_group FROM donors WHERE id = ?", (did,)).fetchone()
     assert row["blood_group"] == "A+"
+
+
+def test_add_request_rejects_nonpositive_units(conn):
+    with pytest.raises(ValueError, match="[Pp]ositive"):
+        db.add_request(conn, "O-", 0, 3, "Hosp", 0, 0)

@@ -71,6 +71,8 @@ def add_request(conn, blood_group, units, urgency, hospital, x, y) -> int:
     abo, rh = parse_group(blood_group)  # validate; raises ValueError on bad input
     if not 1 <= urgency <= 5:
         raise ValueError("urgency must be 1..5")
+    if units < 1:
+        raise ValueError("units must be a positive integer (>= 1)")
     cur = conn.execute(
         "INSERT INTO requests (blood_group, units, urgency, hospital, x, y)"
         " VALUES (?,?,?,?,?,?)",
