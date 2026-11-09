@@ -28,8 +28,14 @@ _ABO_ANTIBODIES = {"O": frozenset({"A", "B"}), "A": frozenset({"B"}),
 
 
 def parse_group(group: str) -> tuple[str, str]:
-    """Split e.g. 'AB-' -> ('AB', '-'). Raises ValueError on bad input."""
-    group = group.strip().upper().replace("POS", "+").replace("NEG", "-")
+    """Split e.g. 'AB-' -> ('AB', '-'). Raises ValueError on bad input.
+
+    Accepts spaced and spelled-out forms: 'A +', 'AB -', 'O positive',
+    'B NEGATIVE' (hand-typed input from donor forms is rarely canonical).
+    """
+    group = "".join(group.upper().split())
+    group = group.replace("POSITIVE", "+").replace("NEGATIVE", "-")
+    group = group.replace("POS", "+").replace("NEG", "-")
     if group.endswith("+") or group.endswith("-"):
         abo, rh = group[:-1], group[-1]
     else:  # allow bare 'A', 'O', ... -> assume Rh unknown not allowed

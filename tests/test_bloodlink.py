@@ -6,7 +6,7 @@ donor->recipient table (hardcoded, not derived from the implementation).
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 
@@ -66,6 +66,14 @@ def test_bad_group_raises():
         C.is_compatible("X+", "O-")
     with pytest.raises(ValueError):
         C.is_compatible("A", "O-")
+
+
+def test_parse_group_accepts_spaced_and_spelled_out_forms():
+    assert C.parse_group("A +") == ("A", "+")
+    assert C.parse_group("AB -") == ("AB", "-")
+    assert C.parse_group("o positive") == ("O", "+")
+    assert C.parse_group("B NEGATIVE") == ("B", "-")
+    assert C.is_compatible("A +", "A+")  # spaced input flows through
 
 
 def test_exactness_ordering():
@@ -173,7 +181,10 @@ def test_alerts_logged_and_rendered(conn, capsys):
 # ---------- drives ----------
 
 def test_drive_schedule_and_list(conn):
-    db.schedule_drive(conn, "2026-10-10", "Hall", ["O-", "A+"], 1, 2)
+    # Upcoming drive must be dated relative to real today: list_drives
+    # filters on date.today(), so a hardcoded date goes stale.
+    future = (date.today() + timedelta(days=30)).isoformat()
+    db.schedule_drive(conn, future, "Hall", ["O-", "A+"], 1, 2)
     db.schedule_drive(conn, "2020-01-01", "Old Hall", ["B+"], 0, 0)
     upcoming = db.list_drives(conn, upcoming_only=True)
     assert len(upcoming) == 1 and upcoming[0]["location"] == "Hall"
